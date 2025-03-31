@@ -25,9 +25,15 @@ class Author(models.Model):
         self.rating = post_rating + comment_rating + post_comment_rating
         self.save()
 
+    def __str__(self):
+        return self.user.username
+
 
 class Category(models.Model):
     name = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.name
 
 
 class Post(models.Model):
@@ -56,10 +62,14 @@ class Post(models.Model):
     def preview(self):
         return self.post_content[:124] + '...' if len(self.post_content) > 124 else self.post_content
 
+    def __str__(self):
+        return f"{self.title} (by {self.author.user.username})"
+
 
 class Postcategory(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
+
 
 
 class Comment(models.Model):
@@ -76,3 +86,6 @@ class Comment(models.Model):
     def dislike(self):
         self.rating -= 1
         self.save()
+
+    def __str__(self):
+        return self.comm_text
