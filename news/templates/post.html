@@ -1,10 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
+{% load custom_filters %}
+
 <head>
     <meta charset="UTF-8">
     <title>Post</title>
 </head>
 <body>
-<h1>{{ post }}</h1>
+<h1>{{ post.title|censor }}</h1>
+<h3>{{ post.date_created|date:'d M Y' }}</h3>
+<p>{{ post.post_content|censor }}</p>
 </body>
 </html>
