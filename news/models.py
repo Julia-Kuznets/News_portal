@@ -65,6 +65,9 @@ class Post(models.Model):
     def __str__(self):
         return f"{self.title} (by {self.author.user.username})"
 
+    # def add_category(self, category):
+    #     Postcategory.objects.create(post=self, category=category)
+
 
 class Postcategory(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)

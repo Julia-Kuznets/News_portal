@@ -8,11 +8,55 @@
 <head>
     <meta charset="UTF-8">
     <title>Все посты</title>
+
+    <style>
+        .hidden-panel {
+            display: none;
+            position: absolute;
+            background: #f9f9f9;
+            padding: 20px;
+            border: 1px solid #ddd;
+            width: 250px;
+        }
+
+        /* Когда чекбокс отмечен, показываем панель */
+        #toggle:checked ~ .hidden-panel {
+            display: block;
+        }
+
+        .show-panel {
+            display: inline-block;
+            padding: 10px 15px;
+            background: #2196F3;
+            color: white;
+            cursor: pointer;
+        }
+    </style>
 </head>
+
 <body>
 <h1>Все посты</h1>
     <h3>{% current_time %}</h3>
-    <h3>Количество всех новостей: {{ posts|length }}</h3>
+    <h3>Количество новостей на странице: {{ posts.count }}</h3>
+
+     <div style="margin: 50px;">
+        <!-- Скрытый чекбокс, который будет управлять панелью -->
+        <input type="checkbox" id="toggle" style="display:none">
+
+        <!-- Кнопка (на самом деле label для чекбокса) -->
+        <label for="toggle" class="show-panel">Фильтр</label>
+
+        <!-- Скрытая панель с формой -->
+        <div class="hidden-panel">
+             <form action="" method="get">
+
+                   {{ filterset.form.as_p }}
+
+                   <input type="submit" value="Найти" />
+                 <button type="reset">Сбросить</button>
+               </form>
+        </div>
+    </div>
     {% if posts %}
         <table>
             <tr>
@@ -31,6 +75,23 @@
         </table>
     {% else %}
         <p>Нет доступных постов</p>
+    {% endif %}
+
+    {% if page_obj.has_previous %}
+        <a href='?{% url_replace page=1 %}'>1</a>
+        {% if page_obj.previous_page_number != 1 %}
+            ...
+            <a href="?{% url_replace page=page_obj.previous_page_number %}">{{ page_obj.previous_page_number }}</a>
+        {% endif %}
+    {% endif %}
+
+    {{ page_obj.number }}
+    {% if page_obj.has_next %}
+        <a href="?{% url_replace page=page_obj.next_page_number %}">{{ page_obj.next_page_number }}</a>
+        {% if paginator.num_pages != page_obj.next_page_number %}
+            ...
+            <a href="?{% url_replace page=page_obj.paginator.num_pages %}">{{ page_obj.paginator.num_pages }}</a>
+           {% endif %}
     {% endif %}
 </body>
 </html>
